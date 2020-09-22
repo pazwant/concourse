@@ -190,6 +190,7 @@ var _ = Describe("Resources API", func() {
 				resource1.CheckSetupErrorReturns(nil)
 				resource1.CheckErrorReturns(nil)
 				resource1.PipelineNameReturns("a-pipeline")
+				resource1.TeamNameReturns("a-team")
 				resource1.NameReturns("resource-1")
 				resource1.TypeReturns("type-1")
 				resource1.LastCheckEndTimeReturns(time.Unix(1513364881, 0))
@@ -199,6 +200,7 @@ var _ = Describe("Resources API", func() {
 				resource2.CheckErrorReturns(errors.New("sup"))
 				resource2.CheckSetupErrorReturns(nil)
 				resource2.PipelineNameReturns("a-pipeline")
+				resource2.TeamNameReturns("a-team")
 				resource2.NameReturns("resource-2")
 				resource2.TypeReturns("type-2")
 
@@ -207,6 +209,7 @@ var _ = Describe("Resources API", func() {
 				resource3.CheckErrorReturns(nil)
 				resource3.CheckSetupErrorReturns(errors.New("sup"))
 				resource3.PipelineNameReturns("a-pipeline")
+				resource3.TeamNameReturns("a-team")
 				resource3.NameReturns("resource-3")
 				resource3.TypeReturns("type-3")
 
@@ -384,6 +387,7 @@ var _ = Describe("Resources API", func() {
 					BeforeEach(func() {
 						fakeResource = new(dbfakes.FakeResource)
 						fakeResource.IDReturns(1)
+						fakeResource.TeamNameReturns("a-team")
 						fakePipeline.ResourceReturns(fakeResource, true, nil)
 					})
 
@@ -963,6 +967,7 @@ var _ = Describe("Resources API", func() {
 					resource1.CheckErrorReturns(errors.New("sup"))
 					resource1.PipelineNameReturns("a-pipeline")
 					resource1.NameReturns("resource-1")
+					resource1.TeamNameReturns("a-team")
 					resource1.TypeReturns("type-1")
 					resource1.LastCheckEndTimeReturns(time.Unix(1513364881, 0))
 
@@ -1035,6 +1040,7 @@ var _ = Describe("Resources API", func() {
 						resource1.CheckSetupErrorReturns(errors.New("sup"))
 						resource1.CheckErrorReturns(errors.New("sup"))
 						resource1.PipelineNameReturns("a-pipeline")
+						resource1.TeamNameReturns("a-team")
 						resource1.NameReturns("resource-1")
 						resource1.TypeReturns("type-1")
 						resource1.LastCheckEndTimeReturns(time.Unix(1513364881, 0))
@@ -1077,6 +1083,7 @@ var _ = Describe("Resources API", func() {
 					BeforeEach(func() {
 						resource1 := new(dbfakes.FakeResource)
 						resource1.PipelineNameReturns("a-pipeline")
+						resource1.TeamNameReturns("a-team")
 						resource1.NameReturns("resource-1")
 						resource1.TypeReturns("type-1")
 						resource1.LastCheckEndTimeReturns(time.Unix(1513364881, 0))
@@ -1116,6 +1123,7 @@ var _ = Describe("Resources API", func() {
 					BeforeEach(func() {
 						resource1 := new(dbfakes.FakeResource)
 						resource1.PipelineNameReturns("a-pipeline")
+						resource1.TeamNameReturns("a-team")
 						resource1.NameReturns("resource-1")
 						resource1.TypeReturns("type-1")
 						resource1.LastCheckEndTimeReturns(time.Unix(1513364881, 0))
@@ -1167,6 +1175,7 @@ var _ = Describe("Resources API", func() {
 					resource1 := new(dbfakes.FakeResource)
 					resource1.CheckSetupErrorReturns(errors.New("sup"))
 					resource1.PipelineNameReturns("a-pipeline")
+					resource1.TeamNameReturns("a-team")
 					resource1.NameReturns("resource-1")
 					resource1.TypeReturns("type-1")
 					resource1.LastCheckEndTimeReturns(time.Unix(1513364881, 0))

@@ -5,7 +5,7 @@ import (
 	"github.com/concourse/concourse/atc/db"
 )
 
-func Resource(resource db.Resource, showCheckError bool, teamName string) atc.Resource {
+func Resource(resource db.Resource, showCheckError bool) atc.Resource {
 	var checkErrString, rcCheckErrString string
 	var failingToCheck bool
 	if resource.CheckSetupError() != nil && showCheckError {
@@ -23,7 +23,7 @@ func Resource(resource db.Resource, showCheckError bool, teamName string) atc.Re
 	atcResource := atc.Resource{
 		Name:         resource.Name(),
 		PipelineName: resource.PipelineName(),
-		TeamName:     teamName,
+		TeamName:     resource.TeamName(),
 		Type:         resource.Type(),
 		Icon:         resource.Icon(),
 
