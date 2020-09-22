@@ -151,7 +151,7 @@ var _ = BeforeEach(func() {
 
 	build = new(dbfakes.FakeBuild)
 
-	checkPipelineAccessHandlerFactory := auth.NewCheckPipelineAccessHandlerFactory(dbTeamFactory)
+	checkPipelineAccessHandlerFactory := auth.CheckPipelineAccessHandlerFactory{}
 
 	checkBuildReadAccessHandlerFactory := auth.NewCheckBuildReadAccessHandlerFactory(dbBuildFactory)
 
@@ -170,6 +170,7 @@ var _ = BeforeEach(func() {
 			checkBuildWriteAccessHandlerFactory,
 			checkWorkerTeamAccessHandlerFactory,
 		),
+		wrappa.FetchPipelineWrappa{TeamFactory: dbTeamFactory},
 	}
 
 	handler, err := api.NewHandler(

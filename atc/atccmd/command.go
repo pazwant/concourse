@@ -1807,12 +1807,12 @@ func (cmd *RunCommand) constructAPIHandler(
 	policyChecker *policy.Checker,
 ) (http.Handler, error) {
 
-	checkPipelineAccessHandlerFactory := auth.NewCheckPipelineAccessHandlerFactory(teamFactory)
+	checkPipelineAccessHandlerFactory := auth.CheckPipelineAccessHandlerFactory{}
 	checkBuildReadAccessHandlerFactory := auth.NewCheckBuildReadAccessHandlerFactory(dbBuildFactory)
 	checkBuildWriteAccessHandlerFactory := auth.NewCheckBuildWriteAccessHandlerFactory(dbBuildFactory)
 	checkWorkerTeamAccessHandlerFactory := auth.NewCheckWorkerTeamAccessHandlerFactory(dbWorkerFactory)
 
-	rejectArchivedHandlerFactory := pipelineserver.NewRejectArchivedHandlerFactory(teamFactory)
+	rejectArchivedHandlerFactory := pipelineserver.RejectArchivedHandlerFactory{}
 
 	aud := auditor.NewAuditor(
 		cmd.Auditor.EnableBuildAuditLog,
@@ -1846,6 +1846,7 @@ func (cmd *RunCommand) constructAPIHandler(
 			checkWorkerTeamAccessHandlerFactory,
 		),
 		wrappa.NewRejectArchivedWrappa(rejectArchivedHandlerFactory),
+		wrappa.FetchPipelineWrappa{TeamFactory: teamFactory},
 		wrappa.NewConcourseVersionWrappa(concourse.Version),
 		wrappa.NewAccessorWrappa(
 			logger,
