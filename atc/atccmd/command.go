@@ -1841,7 +1841,10 @@ func (cmd *RunCommand) constructAPIHandler(
 			customRoles,
 		),
 		wrappa.NewConcourseVersionWrappa(concourse.Version),
-		wrappa.FetchPipelineWrappa{TeamFactory: teamFactory},
+		wrappa.FetchPipelineWrappa{
+			TeamFactory:     teamFactory,
+			PipelineFactory: dbPipelineFactory,
+		},
 		wrappa.NewRejectArchivedWrappa(rejectArchivedHandlerFactory),
 		wrappa.NewAPIAuthWrappa(
 			checkPipelineAccessHandlerFactory,

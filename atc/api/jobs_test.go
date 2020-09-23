@@ -1362,6 +1362,7 @@ var _ = Describe("Jobs API", func() {
 
 					Context("when next/previous pages are available", func() {
 						BeforeEach(func() {
+							fakePipeline.IDReturns(123)
 							fakeJob.BuildsReturns(returnedBuilds, db.Pagination{
 								Newer: &db.Page{From: db.NewIntPtr(4), Limit: 2},
 								Older: &db.Page{To: db.NewIntPtr(2), Limit: 2},
@@ -1370,8 +1371,8 @@ var _ = Describe("Jobs API", func() {
 
 						It("returns Link headers per rfc5988", func() {
 							Expect(response.Header["Link"]).To(ConsistOf([]string{
-								fmt.Sprintf(`<%s/api/v1/teams/some-team/pipelines/some-pipeline/jobs/some-job/builds?from=4&limit=2>; rel="previous"`, externalURL),
-								fmt.Sprintf(`<%s/api/v1/teams/some-team/pipelines/some-pipeline/jobs/some-job/builds?to=2&limit=2>; rel="next"`, externalURL),
+								fmt.Sprintf(`<%s/api/v1/pipelines/123/jobs/some-job/builds?from=4&limit=2>; rel="previous"`, externalURL),
+								fmt.Sprintf(`<%s/api/v1/pipelines/123/jobs/some-job/builds?to=2&limit=2>; rel="next"`, externalURL),
 							}))
 						})
 					})

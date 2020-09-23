@@ -41,7 +41,6 @@ func (s *Server) ListResourceVersions(pipeline db.Pipeline) http.Handler {
 		}
 
 		resourceName := r.FormValue(":resource_name")
-		teamName := r.FormValue(":team_name")
 
 		urlFrom := r.FormValue(atc.PaginationQueryFrom)
 		urlTo := r.FormValue(atc.PaginationQueryTo)
@@ -90,11 +89,11 @@ func (s *Server) ListResourceVersions(pipeline db.Pipeline) http.Handler {
 		}
 
 		if pagination.Older != nil {
-			s.addNextLink(w, teamName, pipeline.Name(), resourceName, *pagination.Older)
+			s.addNextLink(w, pipeline.ID(), resourceName, *pagination.Older)
 		}
 
 		if pagination.Newer != nil {
-			s.addPreviousLink(w, teamName, pipeline.Name(), resourceName, *pagination.Newer)
+			s.addPreviousLink(w, pipeline.ID(), resourceName, *pagination.Newer)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -102,7 +101,7 @@ func (s *Server) ListResourceVersions(pipeline db.Pipeline) http.Handler {
 		w.WriteHeader(http.StatusOK)
 
 		acc := accessor.GetAccessor(r)
-		hideMetadata := !resource.Public() && !acc.IsAuthorized(teamName)
+		hideMetadata := !resource.Public() && !acc.IsAuthorized(pipeline.TeamName())
 
 		versions = present.ResourceVersions(hideMetadata, versions)
 
@@ -114,12 +113,11 @@ func (s *Server) ListResourceVersions(pipeline db.Pipeline) http.Handler {
 	})
 }
 
-func (s *Server) addNextLink(w http.ResponseWriter, teamName, pipelineName, resourceName string, page db.Page) {
+func (s *Server) addNextLink(w http.ResponseWriter, pipelineID int, resourceName string, page db.Page) {
 	w.Header().Add("Link", fmt.Sprintf(
-		`<%s/api/v1/teams/%s/pipelines/%s/resources/%s/versions?%s=%d&%s=%d>; rel="%s"`,
+		`<%s/api/v1/pipelines/%d/resources/%s/versions?%s=%d&%s=%d>; rel="%s"`,
 		s.externalURL,
-		teamName,
-		pipelineName,
+		pipelineID,
 		resourceName,
 		atc.PaginationQueryTo,
 		*page.To,
@@ -129,12 +127,11 @@ func (s *Server) addNextLink(w http.ResponseWriter, teamName, pipelineName, reso
 	))
 }
 
-func (s *Server) addPreviousLink(w http.ResponseWriter, teamName, pipelineName, resourceName string, page db.Page) {
+func (s *Server) addPreviousLink(w http.ResponseWriter, pipelineID int, resourceName string, page db.Page) {
 	w.Header().Add("Link", fmt.Sprintf(
-		`<%s/api/v1/teams/%s/pipelines/%s/resources/%s/versions?%s=%d&%s=%d>; rel="%s"`,
+		`<%s/api/v1/pipelines/%d/resources/%s/versions?%s=%d&%s=%d>; rel="%s"`,
 		s.externalURL,
-		teamName,
-		pipelineName,
+		pipelineID,
 		resourceName,
 		atc.PaginationQueryFrom,
 		*page.From,

@@ -25,7 +25,6 @@ func (s *Server) ListJobBuilds(pipeline db.Pipeline) http.Handler {
 		logger := s.logger.Session("list-job-builds")
 
 		jobName := r.FormValue(":job_name")
-		teamName := r.FormValue(":team_name")
 
 		timestamps := r.FormValue(atc.PaginationQueryTimestamps)
 
@@ -72,11 +71,11 @@ func (s *Server) ListJobBuilds(pipeline db.Pipeline) http.Handler {
 		}
 
 		if pagination.Older != nil {
-			s.addNextLink(w, teamName, pipeline.Name(), jobName, *pagination.Older)
+			s.addNextLink(w, pipeline.ID(), jobName, *pagination.Older)
 		}
 
 		if pagination.Newer != nil {
-			s.addPreviousLink(w, teamName, pipeline.Name(), jobName, *pagination.Newer)
+			s.addPreviousLink(w, pipeline.ID(), jobName, *pagination.Newer)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -95,12 +94,11 @@ func (s *Server) ListJobBuilds(pipeline db.Pipeline) http.Handler {
 	})
 }
 
-func (s *Server) addNextLink(w http.ResponseWriter, teamName, pipelineName, jobName string, page db.Page) {
+func (s *Server) addNextLink(w http.ResponseWriter, pipelineID int, jobName string, page db.Page) {
 	w.Header().Add("Link", fmt.Sprintf(
-		`<%s/api/v1/teams/%s/pipelines/%s/jobs/%s/builds?%s=%d&%s=%d>; rel="%s"`,
+		`<%s/api/v1/pipelines/%d/jobs/%s/builds?%s=%d&%s=%d>; rel="%s"`,
 		s.externalURL,
-		teamName,
-		pipelineName,
+		pipelineID,
 		jobName,
 		atc.PaginationQueryTo,
 		*page.To,
@@ -110,12 +108,11 @@ func (s *Server) addNextLink(w http.ResponseWriter, teamName, pipelineName, jobN
 	))
 }
 
-func (s *Server) addPreviousLink(w http.ResponseWriter, teamName, pipelineName, jobName string, page db.Page) {
+func (s *Server) addPreviousLink(w http.ResponseWriter, pipelineID int, jobName string, page db.Page) {
 	w.Header().Add("Link", fmt.Sprintf(
-		`<%s/api/v1/teams/%s/pipelines/%s/jobs/%s/builds?%s=%d&%s=%d>; rel="%s"`,
+		`<%s/api/v1/pipelines/%d/jobs/%s/builds?%s=%d&%s=%d>; rel="%s"`,
 		s.externalURL,
-		teamName,
-		pipelineName,
+		pipelineID,
 		jobName,
 		atc.PaginationQueryFrom,
 		*page.From,

@@ -24,7 +24,6 @@ func (s *Server) ListPipelineBuilds(pipeline db.Pipeline) http.Handler {
 
 		logger := s.logger.Session("list-pipeline-builds")
 
-		teamName := r.FormValue(":team_name")
 		timestamps := r.FormValue(atc.PaginationQueryTimestamps)
 
 		urlFrom := r.FormValue(atc.PaginationQueryFrom)
@@ -65,11 +64,11 @@ func (s *Server) ListPipelineBuilds(pipeline db.Pipeline) http.Handler {
 		}
 
 		if pagination.Older != nil {
-			s.addNextLink(w, teamName, pipeline.Name(), *pagination.Older)
+			s.addNextLink(w, pipeline.ID(), *pagination.Older)
 		}
 
 		if pagination.Newer != nil {
-			s.addPreviousLink(w, teamName, pipeline.Name(), *pagination.Newer)
+			s.addPreviousLink(w, pipeline.ID(), *pagination.Newer)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -89,12 +88,11 @@ func (s *Server) ListPipelineBuilds(pipeline db.Pipeline) http.Handler {
 	})
 }
 
-func (s *Server) addNextLink(w http.ResponseWriter, teamName, pipelineName string, page db.Page) {
+func (s *Server) addNextLink(w http.ResponseWriter, pipelineID int, page db.Page) {
 	w.Header().Add("Link", fmt.Sprintf(
-		`<%s/api/v1/teams/%s/pipelines/%s/builds?%s=%d&%s=%d>; rel="%s"`,
+		`<%s/api/v1/pipelines/%d/builds?%s=%d&%s=%d>; rel="%s"`,
 		s.externalURL,
-		teamName,
-		pipelineName,
+		pipelineID,
 		atc.PaginationQueryTo,
 		*page.To,
 		atc.PaginationQueryLimit,
@@ -103,12 +101,11 @@ func (s *Server) addNextLink(w http.ResponseWriter, teamName, pipelineName strin
 	))
 }
 
-func (s *Server) addPreviousLink(w http.ResponseWriter, teamName, pipelineName string, page db.Page) {
+func (s *Server) addPreviousLink(w http.ResponseWriter, pipelineID int, page db.Page) {
 	w.Header().Add("Link", fmt.Sprintf(
-		`<%s/api/v1/teams/%s/pipelines/%s/builds?%s=%d&%s=%d>; rel="%s"`,
+		`<%s/api/v1/pipelines/%d/builds?%s=%d&%s=%d>; rel="%s"`,
 		s.externalURL,
-		teamName,
-		pipelineName,
+		pipelineID,
 		atc.PaginationQueryFrom,
 		*page.From,
 		atc.PaginationQueryLimit,
