@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
-gem 'capybara'
-gem 'capybara-selenium'
+gem 'capybara', '>= 3.11.0'
+gem 'capybara-selenium', '>= 0.0.6'
 gem 'color'
-gem 'launchy'
+gem 'launchy', '>= 2.4.3'
 gem 'rspec'
 gem 'rubocop'
 gem 'selenium-webdriver'
