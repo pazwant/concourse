@@ -8,11 +8,14 @@
     "color": "^3.1.2",
     "puppeteer": "^1.19.0",
     "tmp-promise": "^2.0.2",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "@snyk/protect": "latest"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "ava --serial"
+    "test": "ava --serial",
+    "prepare": "yarn run snyk-protect",
+    "snyk-protect": "snyk-protect"
   },
   "repository": "git+https://github.com/concourse/concourse.git",
   "author": "",
@@ -23,5 +26,6 @@
   "homepage": "https://github.com/concourse/concourse#readme",
   "ava": {
     "timeout": "5m"
-  }
+  },
+  "snyk": true
 }
